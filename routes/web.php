@@ -50,5 +50,3 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::'], function () {
         ->name('deleteVoting')
         ->where(['votingId' => '[0-9]+']);
 });
-
-Route::get('/api/user', 'ApiController@user')->name('api-user');

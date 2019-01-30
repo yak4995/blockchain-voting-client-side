@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+use App\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,11 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//damn workaround to get laravel passport to work as it should
+Route::get('/user', function (Request $request) {
+    $bearerToken = $request->bearerToken() ?? '';
+    $accessToken = DB::table('oauth_access_tokens')->where('id', $bearerToken)->first();
+    $user = User::findOrFail($accessToken->user_id ?? 0);
+    return $user;
+    //return $request->user();
+})/*->middleware('auth:api')*/;
