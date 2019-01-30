@@ -60,12 +60,12 @@
         @endforeach
     </div>
     <div class="row justify-content-center">
-        <div class="col-md-4">
-            <a href="{{ url('admin/create-voting-form') }}">Створити вибори</a>
-        </div>
-        <div class="col-md-4 ml-auto">
+        <!--<div class="col-md-4">-->
+            <a class="btn btn-success" href="{{ url('admin/create-voting-form') }}">Створити вибори</a>
+        <!--</div>-->
+        <!--<div class="col-md-4 ml-auto">
             <a href="{{ url('admin/clients') }}">Клієнти</a>
-        </div>
+        </div>->
     </div>
 </div>
 @endsection

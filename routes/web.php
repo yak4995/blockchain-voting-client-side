@@ -23,8 +23,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin::'], function () {
     Route::get('/', 'AdminController@index')
         ->name('index');
 
-    Route::get('/clients', 'AdminController@clients')
-        ->name('clients');
+    /*Route::get('/clients', 'AdminController@clients')
+        ->name('clients');*/
 
     Route::post('/change-user/{userId}', 'AdminController@changeUser')
         ->name('changeUser')
