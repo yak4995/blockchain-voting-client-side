@@ -13,3 +13,5 @@ yarn-error.log
 .env
 .phpunit.result.cache
 .editorconfig
+/public/css
+/public/js

@@ -18,6 +18,9 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/voting/{votingId}', 'HomeController@voting')
+    ->name('voting')
+    ->where(['votingId' => '[0-9]+']);
 
 Route::group(['prefix' => 'admin', 'as' => 'admin::'], function () {
     Route::get('/', 'AdminController@index')

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 use App\Faculty;
 use App\Department;
@@ -159,12 +158,11 @@ class AdminController extends Controller
     {
 
         $candidate = Candidate::findOrFail($candidateId);
-
+        $votingId = $candidate->voting->id;
         if($candidate->voting->is_published) {
             return redirect()->route('admin::voting', ['votingId' => $votingId]);
         }
 
-        $votingId = $candidate->voting->id;
         $candidate->delete();
 
         return redirect()->route('admin::voting', ['votingId' => $votingId]);

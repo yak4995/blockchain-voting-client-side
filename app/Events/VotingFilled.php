@@ -2,22 +2,20 @@
 
 namespace App\Events;
 
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 use App\Voting;
 
-class VotingFilled
+class VotingFilled implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /** @var Voting $voting */
-    private $voting;
+    public $voting;
 
     /**
      * Create a new event instance.
@@ -31,22 +29,12 @@ class VotingFilled
     }
 
     /**
-     * Get the voting
-     * 
-     * @return Voting
-     */
-    public function getVoting(): Voting
-    {
-        return $this->voting;
-    }
-
-    /**
      * Get the channels the event should broadcast on.
      *
      * @return \Illuminate\Broadcasting\Channel|array
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('channel-name');
+        return new Channel('voting');
     }
 }

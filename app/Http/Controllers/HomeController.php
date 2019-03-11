@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\AdmittedVoter;
 use App\Voting;
 
 class HomeController extends Controller
@@ -34,6 +33,23 @@ class HomeController extends Controller
         return view('home', [
             'profile' => $user,
             'votings' => $votings,
+        ]);
+    }
+
+    /**
+     * Voting page
+     */
+    public function voting(Request $request, int $votingId) {
+        $user = Auth::user();
+        $voting = Voting::where('id', $votingId)
+                    ->where('is_published', true)
+                    ->whereHas('admittedVoters', function($query) use ($user) {
+                        $query->where('user_id', $user->id);
+                    })
+                    ->firstOrFail();
+
+        return view('voting', [
+            'voting' => $voting
         ]);
     }
 }
