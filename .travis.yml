@@ -5,10 +5,13 @@ language: php
 
 php:
   - '7.2'
+
+services:
+  - postgresql
   
 before_script:
   - mv travis.env.php .env.testing.php
-  - psql -c 'create database yaktest;'
+  - psql -c 'create database yaktest;' -U postgres
   - composer self-update
   - composer install --dev --prefer-source --no-interaction
   - chmod -R 777 app/storage
