@@ -7,12 +7,22 @@ php:
   - '7.2'
   
 before_script:
+  - mv travis.env.php .env.testing.php
+  - psql -c 'create database yaktest;'
   - composer self-update
-  - composer install --no-interaction
+  - composer install --dev --prefer-source --no-interaction
+  - chmod -R 777 app/storage
   - nvm install 7.7.1
   - npm install npm@latest -g
   - npm install
+  - php artisan migrate:install --env=testing --no-interaction -vvv
   
 script:
+  - php artisan migrate --env=testing --no-interaction -vvv
+  - php artisan db:seed --env=testing --no-interaction -vvv
   - vendor/bin/phpunit --coverage-text
   - npm run travis-build
+  - php artisan migrate:rollback --env=testing --no-interaction -vvv
+
+matrix:
+ fast_finish: true
