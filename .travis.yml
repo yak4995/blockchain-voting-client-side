@@ -10,21 +10,18 @@ services:
   - postgresql
   
 before_script:
-  - mv travis.env.php .env.testing.php
+  - mv travis.env .env
   - psql -c 'create database yaktest;' -U postgres
   - composer self-update
   - composer install --dev --prefer-source --no-interaction
   - nvm install 7.7.1
   - npm install npm@latest -g
   - npm install
-  - php artisan migrate:install --env=testing --no-interaction -vvv
   
 script:
-  - php artisan migrate --env=testing --no-interaction -vvv
-  - php artisan db:seed --env=testing --no-interaction -vvv
   - vendor/bin/phpunit --coverage-text
-  - npm run travis-build
-  - php artisan migrate:rollback --env=testing --no-interaction -vvv
+  - npm run production
+  - php artisan migrate:rollback --no-interaction -vvv
 
 matrix:
  fast_finish: true
