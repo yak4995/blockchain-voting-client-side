@@ -1,0 +1,59 @@
+version: '2.4'
+services:
+  application:
+    build: docker/application
+    container_name: bcvc.tk
+    working_dir: /app
+    ports:
+    - '9001:9001'
+    healthcheck:
+      test: pgrep php-fpm
+      interval: 1s
+      timeout: 1s
+      retries: 60
+    volumes:
+    - ./:/app:cached
+    - ./docker/application/bcvc-fpm.conf:/etc/php/7.2/fpm/pool.d/bcvc-fpm.conf
+    - ./docker/application/php.ini:/etc/php/7.2/cli/php.ini
+    - ./docker/application/bcvc-supervisord.conf:/etc/supervisor/supervisord.conf
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx.bcvc.tk
+    ports:
+    - '80:80'
+    - '443:443'
+    depends_on:
+      application:
+        condition: service_healthy
+    links:
+    - application
+    volumes:
+    - ./:/app:cached
+    - ./docker/nginx/bcvc.conf:/etc/nginx/conf.d/default.conf
+
+  daemons:
+    build: ./docker/supervisor
+    container_name: daemons.bcvc.tk
+    restart: 'no'
+    ports:
+    - '10000:10000'
+    depends_on:
+      application:
+        condition: service_healthy
+    volumes:
+    - ./:/app
+    - ./docker/supervisor/configuration:/etc/supervisor
+
+  composer:
+    image: composer/composer:alpine
+    restart: 'no'
+    command: install --ignore-platform-reqs
+    volumes:
+    - ./:/app
+
+  watchtower:
+    image: v2tec/watchtower
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
